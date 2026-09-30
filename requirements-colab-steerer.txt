@@ -1,0 +1,11 @@
+# Minimal additions to a standard GPU-enabled Google Colab runtime.
+# PyTorch, torchvision, NumPy, pandas, Pillow, SciPy, and OpenCV are provided by Colab.
+# Install this file with --no-build-isolation after the build prerequisites shown in
+# colab_steerer_mdc_test.ipynb; MMCV 1.x still imports pkg_resources during setup.
+mmcv==1.6.0
+timm==0.6.13
+yacs==0.1.8
+dict_recursive_update==1.0.1
+einops>=0.8,<1
+torchsummary==1.5.1
+easydict==1.13
