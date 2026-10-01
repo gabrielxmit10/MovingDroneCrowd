@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from ..layers.conv import ResBlock
 # from ..builder import HEADS
-from .base_head import BaseHead
 
 BatchNorm2d = nn.BatchNorm2d
 BN_MOMENTUM = 0.01

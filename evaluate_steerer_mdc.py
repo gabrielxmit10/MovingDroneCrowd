@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import os
+import runpy
 import shutil
 import subprocess
 import sys
@@ -234,14 +235,16 @@ def unwrap_state_dict(checkpoint: Any) -> dict[str, Any]:
 
 def load_model(checkpoint_path: Path, device: Any) -> tuple[Any, int]:
     import torch
-    from mmcv import Config
+    from easydict import EasyDict
 
     repo_root = Path(__file__).resolve().parent
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
     from model.density_estimator.STEERER.build_counter import Baseline_Counter
 
-    config = Config.fromfile(str(repo_root / "model/density_estimator/STEERER/configs/MDC.py"))
+    config_path = repo_root / "model/density_estimator/STEERER/configs/MDC.py"
+    raw_config = runpy.run_path(str(config_path))
+    config = EasyDict({key: raw_config[key] for key in ("network", "dataset", "train")})
     # The complete counter checkpoint contains the backbone. Avoid an unnecessary attempt
     # to load the stale relative pretraining path embedded in the original config.
     config.network.pretrained_backbone = ""
