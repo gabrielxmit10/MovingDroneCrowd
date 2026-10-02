@@ -342,6 +342,7 @@ def calculate_summary(
         "status": "complete" if complete else "incomplete",
         "created_utc": utc_now(),
         "run_signature": run_config["run_signature"],
+        "split_file": run_config["split_file"],
         "expected_samples": len(expected_ids),
         "completed_samples": len(rows),
         "missing_samples": len(missing),
@@ -478,7 +479,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 torch.cuda.manual_seed_all(args.seed)
                 torch.backends.cudnn.benchmark = True
                 torch.backends.cudnn.enabled = True
-                torch.cuda.reset_peak_memory_stats(device)
+                # Each evaluation runs in a fresh process, so CUDA's peak-memory
+                # counter already starts at zero. reset_peak_memory_stats rejects
+                # the device argument on some Colab PyTorch builds and is not
+                # needed for inference or for the reported peak-memory metric.
             print(f"Loading STEERER checkpoint: {args.checkpoint}")
             model, parameter_count = load_model(args.checkpoint, device)
             print(f"Model parameters: {parameter_count:,}")
